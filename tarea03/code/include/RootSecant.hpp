@@ -31,13 +31,44 @@ namespace anpi {
    */
   template<typename T>
   T rootSecant(const std::function<T(T)>& funct,T xi,T xii,const T eps) {
-
-    // TODO: Put your code in here!
     
-    // Return NaN if no root was found
-    return std::numeric_limits<T>::quiet_NaN();
-  }
+    const int maxi = std::numeric_limits<T>::digits;
 
+    //Declaracion de variables
+    T fxi = funct(xi);      //Funcion evaluada en xi
+    T fxii = funct(xii);    //Funcion evaluada en xii
+    T xr;                   //Raiz estimada 
+    T fr;                   //Funcion evaluada en raiz xr
+    T xii_old = xii;        //Respaldo de xii 
+
+    T ea;                   //Error de parada.
+
+    //Proceso de iteracion para el calculo
+    for (int i=0; i <= maxi; ++i) {
+      //Calculo de raiz
+      xr = xi - (fxi*(xii-xi))/(fxii-fxi);
+      fr = funct(xr); //Evalua raiz en funcion
+        
+      if (std::abs(xr) > std::numeric_limits<T>::epsilon()){
+        ea = std::abs((xr-xii_old)/xr)*T(100);
+      }
+        
+      //Intercambia puntos de referencia
+      xi  = xii;
+      fxi = fxii;
+
+      xii_old = xii;
+      xii = xr;
+      fxii = fr;
+
+      if (ea < eps){
+          return xr;
+        }
+    }
+
+    // Retorna un NaN si no encontro  ninguna raiz
+     return std::numeric_limits<T>::quiet_NaN();
+    }
 }
   
 #endif
