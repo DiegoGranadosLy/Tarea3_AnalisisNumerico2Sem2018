@@ -30,13 +30,13 @@ namespace anpi {
    * @return root found, or NaN if no root could be found
    */
   template<typename T>
-  T rootRidder(const std::function<T(T)>& funct,T x1,T x2,const T eps) {
+  T rootRidder(const std::function<T(T)>& funct,T xi,T xii,const T eps) {
     const int maxi = std::numeric_limits<T>::digits;           //Numero maximo de iteraciones
-    T fl = funct(x1); //Valor de la funcion en x1 = Limite inferior.
-    T fh = funct(x2); //Valor de la funcion en xu = Limite superior.
+    T fl = funct(xi); //Valor de la funcion en xi = Limite inferior.
+    T fh = funct(xii); //Valor de la funcion en xu = Limite superior.
     if((fl > T(0) &&  fh < T(0)) || (fl < T(0) &&  fh > T(0))){ //En caso de encontrar un cambio de signo en los
-      T xl = x1;                                              //limites, aseguramos una raiz dentro del intervalo.
-      T xh = x2; 
+      T xl = xi;                                              //limites, aseguramos una raiz dentro del intervalo.
+      T xh = xii; 
       T ans = -9.99e99;// !!!!!!!!!!!!!!!!!!!!!! Ni idea de para que sirve esto..!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       for (int i=maxi;i>0;i--){     //Loop iterativo para el calculo de la raiz.
         T xm = 0.5*(xl+xh);     //Calculo del punto medio.
@@ -78,10 +78,10 @@ namespace anpi {
     }else{
 
       if (fl == T(0)){
-        return x1;
+        return xi;
       }
       if (fh == T(0)){
-        return x2;
+        return xii;
       }
     }
      
