@@ -50,9 +50,9 @@ namespace anpi {
     template<typename T>
     T t3(const T x)  { return x*x-std::atan(x); }
 
-    /// Fourth testing function for roots x² = atan(x)
-    template<typename T>
-    T t4(const T x)  { return cube(x-T(2)) + T(0.01); }
+	/// Fourth testing function for roots (x-2)???3; + 0.01(x-2)
+	template<typename T>
+	T t4(const T x) { const T x0=x-T(2); return cube(x0) + T(0.01)*x0; }
 
     
     enum TestIntervalMode {
@@ -74,14 +74,14 @@ namespace anpi {
       if (testInterval==TestInterval) {
         try {
           solver(t1<T>,T(2),T(0),eps);
-          BOOST_CHECK(false && "solver should catch inverted interval");
+          BOOST_CHECK(false && "solver should catch inverted interval");/////////////////////////////////////////////////
         } catch(Exception exc ) {
           BOOST_CHECK(true && "successfully catched");
         }
         
         try {
           solver(t3<T>,T(1),T(2),eps);
-          BOOST_CHECK(false && "solver should catch unenclosed root");
+          BOOST_CHECK(false && "solver should catch unenclosed root");/////////////////////////////////////////////////
         } catch(Exception exc ) {
           BOOST_CHECK(true && "successfully catched");
         }
@@ -90,10 +90,10 @@ namespace anpi {
       for (T eps=T(1)/T(10); eps>static_cast<T>(1.0e-7); eps/=T(10)) {
 
         T sol = solver(t1<T>,T(0),T(2),eps);
-        BOOST_CHECK(std::abs(t1<T>(sol))<eps);
+        BOOST_CHECK(std::abs(t1<T>(sol))<eps);//////////////////////////////////////////////////////////////////////////
 
         sol = solver(t2<T>,T(0),T(2),eps);
-        BOOST_CHECK(std::abs(t2<T>(sol))<eps);
+        BOOST_CHECK(std::abs(t2<T>(sol))<eps);/////////////////////////////////////////////////????????????????????
 
         sol = solver(t3<T>,T(0),T(0.5),eps);
         BOOST_CHECK(std::abs(t3<T>(sol))<eps);

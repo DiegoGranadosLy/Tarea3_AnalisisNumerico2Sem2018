@@ -43,6 +43,7 @@ namespace anpi {
 
     T ea;                   //Error de parada.
 
+
     //Proceso de iteracion para el calculo
     for (int i=0; i <= maxi; ++i) {
       //Calculo de raiz

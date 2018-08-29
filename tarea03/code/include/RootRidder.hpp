@@ -37,7 +37,7 @@ namespace anpi {
     if((fl > T(0) &&  fh < T(0)) || (fl < T(0) &&  fh > T(0))){ //En caso de encontrar un cambio de signo en los
       T xl = xi;                                              //limites, aseguramos una raiz dentro del intervalo.
       T xh = xii; 
-      T ans = -9.99e99;// !!!!!!!!!!!!!!!!!!!!!! Ni idea de para que sirve esto..!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      T ans = -9.99e99;
       for (int i=maxi;i>0;i--){     //Loop iterativo para el calculo de la raiz.
         T xm = 0.5*(xl+xh);     //Calculo del punto medio.
         T fm = funct(xm);
@@ -46,12 +46,12 @@ namespace anpi {
           return ans;
         }
         T xnew = xm + (xm - xl)*((fl > fh ? T(1) : T(-1))*fm/s); //Calculo de la nueva raiz (x4 || xr)
-        if (std::abs(xnew-ans) <= eps){              //Ni idea de para que es esto.........!!!!!!!!!!!!!
+        if ((std::abs(xnew-ans)/xnew)*T(100) < eps){
           return ans;
         }
         ans = xnew;       //Se asigna la raiz a ans
         T fnew = funct(ans);    //Se evalua la funcion en xnew
-        if (fnew == T(0)){    //En caso de ser la solucion se retorna la raiz (ans || xnew)
+        if (fnew == T(0)){    //En caso de ser la solucion exacta se retorna la raiz (ans || xnew)
           return ans;
         }
         if(fm*fnew < T(0)){

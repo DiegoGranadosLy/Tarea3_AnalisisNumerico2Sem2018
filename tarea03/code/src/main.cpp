@@ -10,6 +10,12 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <RootBisection.hpp>
+#include <RootInterpolation.hpp>
+#include <RootNewtonRaphson.hpp>
+#include <RootSecant.hpp>
+#include <RootBrent.hpp>
+#include <RootRidder.hpp>
 
 using namespace std;
 
@@ -30,7 +36,7 @@ struct funcion2 {
 template <class T>
 struct funcion3 {
     T operator()(T x){
-        const T PI = std::atan(T(1))*T(4);
+        const T PI = atan(T(1))*T(4);
         return atan(x)*(T(180)/PI)-(x*x);
     }
 };

@@ -30,11 +30,11 @@ namespace anpi {
   template<typename T>
   T derivate(const std::function<T(T)>& funct,T xi) {
     T delta = std::numeric_limits<T>::epsilon(); //Tamano minimo de paso
-    T xl  = xi - 50*delta;                       // x_(i-1)
-    T xu  = xi + 50*delta;                       // x_(i+1)
+    T xl  = xi - T(100)*delta;                       // x_(i-1)
+    T xu  = xi + T(100)*delta;                       // x_(i+1)
     T fxl = funct(xl);                           // f(x_(i-1))
     T fxu = funct(xu);                           // f(x_(i+1))
-    return (fxu-fxl)/(100*delta);                //Derivada por aproximacion centrada.
+    return (fxu-fxl)/(T(200)*delta);                //Derivada por aproximacion centrada.
   }
 
   
@@ -68,7 +68,7 @@ namespace anpi {
         ea = std::abs((x_new-xi)/x_new)*T(100);         //Calculo del nuevo error
       }
       xi = x_new;                                       //Actualizacion de xi por la nueva raiz
-      if (ea < eps){ //Error menor al umbral.!          //Condicion de parada cuando se pasa el umbral.
+      if (ea <= eps){ //Error menor al umbral.!          //Condicion de parada cuando se pasa el umbral.
         return x_new;
       }
     }

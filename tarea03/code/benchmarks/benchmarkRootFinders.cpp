@@ -16,6 +16,8 @@
 
 #include "Exception.hpp"
 
+#include <PlotPy.hpp>
+
 /**
  * Load the root finders themselves
  */
@@ -104,7 +106,7 @@ namespace anpi {
      * until the end value is reached.
      */
     template<typename T>
-    void rootBench(const std::function<T(const std::function<T(T)>&,
+    void rootBench(const std::function<T(const std::function<T(T)>&,/*Este es el metodo que se usa..!!*/
                                          T,
                                          T,
                                          const T)>& solver,
@@ -112,6 +114,11 @@ namespace anpi {
                    const T end,
                    const T factor) {
 
+      std::vector<T> veps;//Vector de errores
+      std::vector<T> vF1; //Vector Funcion 1
+      std::vector<T> vF2; //Vector Funcion 2
+      std::vector<T> vF3; //Vector Funcion 3
+      std::vector<T> vF4; //Vector Funcion 4
       if ( (factor >= static_cast<T>(1)) &&
            (factor < static_cast<T>(0)) ) {
         throw anpi::Exception("Invalid factor.  It must be between 0 and 1");
@@ -123,28 +130,38 @@ namespace anpi {
       // Try a series of tolerances
       for (T eps=start; eps>end; eps*=factor) {
         std::cout << "eps=" << eps << "; ";
+        veps.push_back(eps); //Se hace push del error..!!
 
         // Create an std::function instance, which wraps the function
         // t1 with the function counter
         f_type c1(CallCounter<T>(t1<T>));
         solver(c1,T(0),T(2),eps);
-        std::cout << c1.template target< CallCounter<T> >()->counter() << "; ";
-
+        // std::cout << c1.template target< CallCounter<T> >()->counter() << "; ";
+        vF1.push_back(c1.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
         // now the same with function t2
         f_type c2(CallCounter<T>(t2<T>));
         solver(c2,T(0),T(2),eps);
-        std::cout << c2.template target< CallCounter<T> >()->counter() << "; ";
-
+        // std::cout << c2.template target< CallCounter<T> >()->counter() << "; ";
+        vF2.push_back(c2.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
         // now the same with function t3
         f_type c3(CallCounter<T>(t3<T>));
         solver(c3,T(0),T(0.5),eps);
-        std::cout << c3.template target< CallCounter<T> >()->counter() << "; ";
-
+        // std::cout << c3.template target< CallCounter<T> >()->counter() << "; ";
+        vF3.push_back(c3.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
         // now the same with function t4
         f_type c4(CallCounter<T>(t4<T>));
         solver(c4,T(1),T(3),eps);
-        std::cout << c4.template target< CallCounter<T> >()->counter() << std::endl;
+        // std::cout << c4.template target< CallCounter<T> >()->counter() << std::endl;
+        vF4.push_back(c4.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
+
       }
+      static anpi::Plot2d<T> plotter;
+      plotter.initialize(1);
+      plotter.plot(veps,vF1,"Function 1","r");
+      plotter.plot(veps,vF2,"Function 2","g");
+      plotter.plot(veps,vF3,"Function 3","b");
+      plotter.plot(veps,vF4,"Function 4","y");
+      plotter.show();
     }
 
     /**
@@ -162,6 +179,12 @@ namespace anpi {
                    const T end,
                    const T factor) {
 
+      std::vector<T> veps;//Vector de errores
+      std::vector<T> vF1; //Vector Funcion 1
+      std::vector<T> vF2; //Vector Funcion 2
+      std::vector<T> vF3; //Vector Funcion 3
+      std::vector<T> vF4; //Vector Funcion 4
+
       if ( (factor >= static_cast<T>(1)) &&
            (factor < static_cast<T>(0)) ) {
         throw anpi::Exception("Invalid factor.  It must be between 0 and 1");
@@ -173,28 +196,37 @@ namespace anpi {
       // Try a series of tolerances
       for (T eps=start; eps>end; eps*=factor) {
         std::cout << "eps=" << eps << "; ";
+        veps.push_back(eps); //Se hace push del error..!!
 
         // Create an std::function instance, which wraps the function
         // t1 with the function counter       
         f_type c1(CallCounter<T>(t1<T>));
         solver(c1,T(0),eps);
-        std::cout << c1.template target< CallCounter<T> >()->counter() << "; ";
-
+        // std::cout << c1.template target< CallCounter<T> >()->counter() << "; ";
+        vF1.push_back(c1.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
         // now the same with function t2
         f_type c2(CallCounter<T>(t2<T>));
         solver(c2,T(2),eps);
-        std::cout << c2.template target< CallCounter<T> >()->counter() << "; ";
-        
+        // std::cout << c2.template target< CallCounter<T> >()->counter() << "; ";
+        vF2.push_back(c2.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
         // now the same with function t3
         f_type c3(CallCounter<T>(t3<T>));
         solver(c3,T(0),eps);
-        std::cout << c3.template target< CallCounter<T> >()->counter() << "; ";
-        
+        // std::cout << c3.template target< CallCounter<T> >()->counter() << "; ";
+        vF3.push_back(c3.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
         // now the same with function t4
         f_type c4(CallCounter<T>(t4<T>));
         solver(c4,T(1),eps);
-        std::cout << c4.template target< CallCounter<T> >()->counter() << std::endl;
+        // std::cout << c4.template target< CallCounter<T> >()->counter() << std::endl;
+        vF4.push_back(c4.template target< CallCounter<T> >()->counter()); //Se hace push del # de llamadas
       }
+      static anpi::Plot2d<T> plotter;
+      plotter.initialize(1);
+      plotter.plot(veps,vF1,"Function 1","r");
+      plotter.plot(veps,vF2,"Function 2","g");
+      plotter.plot(veps,vF3,"Function 3","b");
+      plotter.plot(veps,vF4,"Function 4","y");
+      plotter.show();
     }
 
     /**
@@ -204,23 +236,23 @@ namespace anpi {
     template<typename T>
     void allSolvers(const T start,const T end,const T factor) {
 
-      std::cout << "Bisection" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootBisection<T>,start,end,factor);
+      // std::cout << "Bisection" << std::endl;
+      //   anpi::bm::rootBench<T>(anpi::rootBisection<T>,start,end,factor);
 
-      std::cout << "Interpolation" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootInterpolation<T>,start,end,factor);
+      // std::cout << "Interpolation" << std::endl;
+      // anpi::bm::rootBench<T>(anpi::rootInterpolation<T>,start,end,factor);
 
-      std::cout << "Secant" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootSecant<T>,start,end,factor);
+      // std::cout << "Secant" << std::endl;
+      // anpi::bm::rootBench<T>(anpi::rootSecant<T>,start,end,factor);
 
-      std::cout << "NewtonRaphson" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootNewtonRaphson<T>,start,end,factor);
+      // std::cout << "NewtonRaphson" << std::endl;
+      // anpi::bm::rootBench<T>(anpi::rootNewtonRaphson<T>,start,end,factor);
 
       std::cout << "Brent" << std::endl;
       anpi::bm::rootBench<T>(anpi::rootBrent<T>,start,end,factor);
 
-      std::cout << "Ridder" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootRidder<T>,start,end,factor);
+      // std::cout << "Ridder" << std::endl;
+      // anpi::bm::rootBench<T>(anpi::rootRidder<T>,start,end,factor);
     }
   } // bm
 }  // anpi
